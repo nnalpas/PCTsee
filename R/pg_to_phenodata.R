@@ -11,7 +11,7 @@ library(lubridate)
 library(stringr)
 
 # 
-my_pg_path <- "S:/processing/Fabio/2019_08_05 HipB turnover (Maja raw files)_with iBAQ/combined/txt/proteinGroups_HipB.txt"
+my_pg_path <- "S:/processing/Fabio/HipA turnover triplicates/combined/txt/proteinGroups.txt"
 
 #
 my_pg <- data.table::fread(
@@ -20,7 +20,7 @@ my_pg <- data.table::fread(
     data.table = FALSE, na.strings = "NaN")
 
 # 
-my_pheno_path <- "C:/Users/kxmna01/Dropbox/Home_work_sync/Work/Colleagues shared work/Fabio/HipA-HipB/Phenodata.txt"
+my_pheno_path <- "C:/Users/kxmna01/Dropbox/Home_work_sync/Work/Colleagues shared work/Fabio/HipA-HipB/HipA/Phenodata.txt"
 
 # 
 my_pheno <- data.table::fread(
@@ -100,7 +100,7 @@ my_cross_map <- my_pg_final %>%
 
 saveRDS(
     object = list(protein = my_pg_final, crossmap = my_cross_map),
-    file = "C:/Users/kxmna01/Documents/GitHub/PCTshowoff/inst/extdata/HipB.RDS",
+    file = "C:/Users/kxmna01/Documents/GitHub/PCTshowoff/inst/extdata/HipA.RDS",
     compress = "gzip")
 
 
