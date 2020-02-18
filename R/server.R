@@ -24,13 +24,7 @@ server <- function(input, output, session) {
         
         #
         my_genes <- my_data()$crossmap %>%
-            dplyr::filter(., key_no_lab == "Gene names") %>%
-            .[["value"]] %>%
-            unique(.)
-        
-        #
-        my_uniids <- my_data()$crossmap %>%
-            dplyr::filter(., key_no_lab == "Protein IDs") %>%
+            dplyr::arrange(., value) %>%
             .[["value"]] %>%
             unique(.)
         
@@ -44,25 +38,16 @@ server <- function(input, output, session) {
         output$profile_param <- renderUI({
             fluidRow(
                 column(
-                    width = 4,
+                    width = 6,
                     selectInput(
                         inputId = "my_gene",
-                        label = "Gene names",
+                        label = "Gene names / Protein IDs",
                         choices = my_genes,
                         multiple = FALSE
                     )
                 ),
                 column(
-                    width = 4,
-                    selectInput(
-                        inputId = "my_uniid",
-                        label = "Protein ID (database ID)",
-                        choices = my_uniids,
-                        multiple = FALSE
-                    )
-                ),
-                column(
-                    width = 4,
+                    width = 6,
                     selectInput(
                         inputId = "my_yaxis",
                         label = "Abundance type",
@@ -80,9 +65,8 @@ server <- function(input, output, session) {
         
         req(input$my_yaxis)
         
-        my_target <- c(input$my_gene, input$my_uniid)
         my_id <- unique(my_data()$crossmap[
-            my_data()$crossmap$value == my_target, ][["id"]])
+            my_data()$crossmap$value == input$my_gene, ][["id"]])
         
         x_axis <- "Duration"
         y_axis <- input$my_yaxis
