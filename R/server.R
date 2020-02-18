@@ -17,53 +17,49 @@ server <- function(input, output, session) {
         readRDS(file = paste0("../inst/extdata/", input$dataset))
     })
     
+    observe({
+        print(paste0("crossmap: ", dim(my_data()$crossmap), "; pg: ", dim(my_data()$protein)))
+    })
     
-    
-    # This section correspond to the profile tab
-    observeEvent(my_data, {
-        
-        #
-        my_genes <- my_data()$crossmap %>%
+    # 
+    my_genes <- reactive({
+        my_data()$crossmap %>%
             dplyr::arrange(., value) %>%
             .[["value"]] %>%
             unique(.)
-        
-        # 
-        my_abund_cols <- my_data()$protein %>%
+    })
+    
+    # 
+    my_abund_cols <- reactive({
+        my_data()$protein %>%
             dplyr::filter(., !is.na(Experiment)) %>%
             .[["key_no_lab"]] %>%
             unique(.)
+    })
+    
+    # 
+    observe({
         
-        #
-        output$profile_param <- renderUI({
-            fluidRow(
-                column(
-                    width = 6,
-                    selectInput(
-                        inputId = "my_gene",
-                        label = "Gene names / Protein IDs",
-                        choices = my_genes,
-                        multiple = FALSE
-                    )
-                ),
-                column(
-                    width = 6,
-                    selectInput(
-                        inputId = "my_yaxis",
-                        label = "Abundance type",
-                        choices = my_abund_cols,
-                        multiple = FALSE
-                    )
-                )
-            )
-        })
+        updateSelectInput(
+            session = session,
+            inputId = "my_gene",
+            label = "Gene names / Protein IDs",
+            choices = my_genes()
+        )
+        
+        updateSelectInput(
+            session = session,
+            inputId = "my_yaxis",
+            label = "Abundance type",
+            choices = my_abund_cols()
+        )
         
     })
     
     # 
     my_res <- reactive({
         
-        req(input$my_yaxis)
+        req(input$my_gene, input$my_yaxis)
         
         my_id <- unique(my_data()$crossmap[
             my_data()$crossmap$value == input$my_gene, ][["id"]])
@@ -83,7 +79,7 @@ server <- function(input, output, session) {
             
         } else (
             warning(
-                "The selected target maps to multiple entries, try using UniProt IDs instead!")
+                "The target was not found, try using UniProt IDs instead!")
         )
         
     })

@@ -28,15 +28,32 @@ ui <- dashboardPage(
                 tabName = "profile",
                 fluidRow(
                     column(
-                        width = 12,
-                        align = "center",
+                        width = 6,
                         selectInput(
                             inputId = "dataset",
-                            label = "Select a PCT dataset",
+                            label = "Select a PCT dataset (few seconds to load)",
                             choices = list.files(
                                 path = "../inst/extdata", pattern = "\\.RDS"),
                             multiple = FALSE,
-                            width = "100%",
+                            width = "100%"
+                        )
+                    ),
+                    column(
+                        width = 3,
+                        selectInput(
+                            inputId = "my_gene",
+                            label = "Gene names / Protein IDs",
+                            choices = NULL,
+                            multiple = FALSE
+                        )
+                    ),
+                    column(
+                        width = 3,
+                        selectInput(
+                            inputId = "my_yaxis",
+                            label = "Abundance type",
+                            choices = NULL,
+                            multiple = FALSE
                         )
                     )
                 ),
