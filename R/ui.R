@@ -4,8 +4,8 @@
 ### Create UI framework --------------------------------------------------
 
 # Define the UI as a function for compatibility with shiny app
-ui <- dashboardPage(
-    header = dashboardHeader(title = "PCTshowoff"),
+ui <- dashboardPagePlus(
+    header = dashboardHeaderPlus(title = "PCTshowoff"),
     sidebar = dashboardSidebar(
         sidebarMenu(
             id = "sbMenu",
@@ -41,7 +41,7 @@ ui <- dashboardPage(
                     column(
                         width = 3,
                         selectInput(
-                            inputId = "my_gene",
+                            inputId = "p_gene",
                             label = "Gene names / Protein IDs",
                             choices = NULL,
                             multiple = FALSE
@@ -50,7 +50,7 @@ ui <- dashboardPage(
                     column(
                         width = 3,
                         selectInput(
-                            inputId = "my_yaxis",
+                            inputId = "p_yaxis",
                             label = "Abundance type",
                             choices = NULL,
                             multiple = FALSE
@@ -58,18 +58,17 @@ ui <- dashboardPage(
                     )
                 ),
                 br(),
-                uiOutput("profile_param"),
                 br(),
                 fluidRow(
                     column(
                         width = 8,
                         align = "center",
-                        plotlyOutput("profile_plot")
+                        plotlyOutput("p_profile")
                     ),
                     column(
                         width = 4,
                         align = "center",
-                        DTOutput("profile_df")
+                        DTOutput("p_prot_info")
                     )
                 )
             ),
@@ -77,9 +76,96 @@ ui <- dashboardPage(
                 tabName = "cluster",
                 fluidRow(
                     column(
-                        width = 12,
+                        width = 4,
+                        selectInput(
+                            inputId = "c_xaxis",
+                            label = "X-axis (samples to cluster)",
+                            choices = NULL,
+                            multiple = FALSE
+                        ),
+                        selectInput(
+                            inputId = "c_yaxis",
+                            label = "Y-axis (protein abundance)",
+                            choices = NULL,
+                            multiple = FALSE
+                        ),
+                        numericInput(
+                            inputId = "c_kcluster",
+                            label = "Number of k-mean clusters (turn-off with 0)",
+                            value = 0,
+                            min = 0,
+                            step = 1
+                        ),
+                        selectInput(
+                            inputId = "c_samples",
+                            label = "Samples to filter out",
+                            choices = NULL,
+                            multiple = TRUE
+                        ),
+                        selectInput(
+                            inputId = "c_labels",
+                            label = "Labels to filter out",
+                            choices = NULL,
+                            multiple = TRUE
+                        ),
+                        selectInput(
+                            inputId = "c_merge",
+                            label = "Replicates merging method",
+                            choices = c(
+                                Mean = "mean", Median = "median"),
+                            multiple = FALSE
+                        ),
+                        selectInput(
+                            inputId = "c_log",
+                            label = "Transform abundances",
+                            choices = c(
+                                None = NA, Log2 = "log2", Log10 = "log10"),
+                            multiple = FALSE
+                        ),
+                        numericInput(
+                            inputId = "c_filt_perc",
+                            label = "Percentage samples with valid abundance (turn-off with 0)",
+                            value = 0,
+                            min = 0,
+                            max = 1,
+                            step = 0.01
+                        ),
+                        numericInput(
+                            inputId = "c_filt_thres",
+                            label = "Minimum abundance threshold",
+                            value = 0,
+                            min = 0,
+                            step = 1
+                        ),
+                        selectInput(
+                            inputId = "c_impute",
+                            label = "Impute missing abundances",
+                            choices = c("Not yet implemented"),
+                            multiple = FALSE
+                        ),
+                        selectInput(
+                            inputId = "c_gene",
+                            label = "Gene names / Protein IDs",
+                            choices = NULL,
+                            multiple = TRUE
+                        )
+                    ),
+                    column(
+                        width = 8,
                         align = "center",
-                        imageOutput("inprogress")
+                        plotOutput("c_heatmap")
+                    )
+                ),
+                fluidRow(
+                    column(
+                        width = 6,
+                        align = "center",
+                        plotOutput("c_scaled_cluster")
+                    ),
+                    column(
+                        width = 6,
+                        align = "center",
+                        plotOutput("c_raw_cluster")
                     )
                 )
             )
