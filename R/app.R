@@ -28,6 +28,7 @@ library(mgcv)
 library(plotly)
 library(DT)
 library(shinydashboard)
+library(shinydashboardPlus)
 library(shiny)
 
 # Increase the size limit for file upload
