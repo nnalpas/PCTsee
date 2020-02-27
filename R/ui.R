@@ -92,7 +92,7 @@ ui <- dashboardPagePlus(
                         numericInput(
                             inputId = "c_kcluster",
                             label = "Number of k-mean clusters (turn-off with 0)",
-                            value = 0,
+                            value = 1,
                             min = 0,
                             step = 1
                         ),
