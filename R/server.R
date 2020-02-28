@@ -146,14 +146,14 @@ server <- function(input, output, session) {
                     choices = pheno()[[input$c_xaxis]]
                 )
             })
-            observe({
-                updateSelectInput(
-                    session = session,
-                    inputId = "c_gene",
-                    label = "Gene names / Protein IDs",
-                    choices = c(pg_cluster()$`Gene names`, pg_cluster()$`Protein IDs`)
-                )
-            })
+            #observe({
+            #    updateSelectInput(
+            #        session = session,
+            #        inputId = "c_gene",
+            #        label = "Gene names / Protein IDs",
+            #        choices = c(pg_cluster()$`Gene names`, pg_cluster()$`Protein IDs`)
+            #    )
+            #})
             
             # Retrieve the protein annotation columns for later export
             my_feature <- reactive({
@@ -242,8 +242,10 @@ server <- function(input, output, session) {
                         ., Samples = paste(
                             !!as.name(input$c_xaxis), Label, sep = "__")) %>%
                     dplyr::select(., id, Samples, value) %>%
-                    tidyr::spread(
-                        data = ., key = "Samples", value = "value", convert = TRUE) %>%
+                    tidyr::pivot_wider(
+                        data = ., names_from = Samples, values_from = value) %>%
+                    #tidyr::spread(
+                    #    data = ., key = "Samples", value = "value", convert = TRUE) %>%
                     as.data.frame(.)
                 rownames(abund) <- abund[["id"]]
                 abund$id <- NULL
@@ -349,69 +351,69 @@ server <- function(input, output, session) {
                 
             })
             
-            # Merge clustering and protein profiles
-            pg_cluster <- reactive({
-                
-                req(pg_dendo, pg_scaled, pg_format)
-                
-                # Extract the cluster number and colour coding
-                h_cols <- data.frame(
-                    id = as.integer(labels(pg_dendo())),
-                    col = get_leaves_branches_col(pg_dendo()),
-                    stringsAsFactors = FALSE)
-                h_cutree <- cutree(tree = pg_dendo(), k = input$c_kcluster) %>%
-                    as.data.frame(.) %>%
-                    set_colnames("k_cluster")
-                h_cutree$id <- as.integer(row.names(h_cutree))
-                h_cutree %<>%
-                    dplyr::left_join(x = ., y = h_cols) %>%
-                    dplyr::left_join(
-                        x = .,
-                        y = my_feature())
-                
-                # Merge to each protein, the corresponding cluster and protein info
-                pg_clust <- pg_scaled() %>%
-                    as.data.frame(.) %>%
-                    tibble::rownames_to_column(.data = ., var = "id") %>%
-                    dplyr::mutate(., id = as.integer(id)) %>%
-                    tidyr::gather(
-                        data = ., key = "key", value = "scaled_value", -id,
-                        na.rm = FALSE, convert = TRUE)
-                pg_clust %>%
-                    tidyr::separate(
-                        data = ., col = "key", into = c(input$c_xaxis, "Label"),
-                        sep = "__", remove = TRUE, convert = TRUE) %>%
-                    dplyr::left_join(
-                        x = ., y = pg_format(),
-                        by = c("id", input$c_xaxis, "Label")) %>%
-                    dplyr::left_join(
-                        x = ., y = h_cutree, by = "id") %>%
-                    dplyr::mutate(., size = 0.4)
-                
-            })
+            ## Merge clustering and protein profiles
+            #pg_cluster <- reactive({
+            #    
+            #    req(pg_dendo, pg_scaled, pg_format)
+            #    
+            #    # Extract the cluster number and colour coding
+            #    h_cols <- data.frame(
+            #        id = as.integer(labels(pg_dendo())),
+            #        col = get_leaves_branches_col(pg_dendo()),
+            #        stringsAsFactors = FALSE)
+            #    h_cutree <- cutree(tree = pg_dendo(), k = input$c_kcluster) %>%
+            #        as.data.frame(.) %>%
+            #        set_colnames("k_cluster")
+            #    h_cutree$id <- as.integer(row.names(h_cutree))
+            #    h_cutree %<>%
+            #        dplyr::left_join(x = ., y = h_cols) %>%
+            #        dplyr::left_join(
+            #            x = .,
+            #            y = my_feature())
+            #    
+            #    # Merge to each protein, the corresponding cluster and protein info
+            #    pg_clust <- pg_scaled() %>%
+            #        as.data.frame(.) %>%
+            #        tibble::rownames_to_column(.data = ., var = "id") %>%
+            #        dplyr::mutate(., id = as.integer(id)) %>%
+            #        tidyr::gather(
+            #            data = ., key = "key", value = "scaled_value", -id,
+            #            na.rm = FALSE, convert = TRUE)
+            #    pg_clust %>%
+            #        tidyr::separate(
+            #            data = ., col = "key", into = c(input$c_xaxis, "Label"),
+            #            sep = "__", remove = TRUE, convert = TRUE) %>%
+            #        dplyr::left_join(
+            #            x = ., y = pg_format(),
+            #            by = c("id", input$c_xaxis, "Label")) %>%
+            #        dplyr::left_join(
+            #            x = ., y = h_cutree, by = "id") %>%
+            #        dplyr::mutate(., size = 0.4)
+            #    
+            #})
             
-            observe({
-                print(paste("Cluster table:", dim(pg_cluster())))
-            })
-            
-            # Colour code specific protein profiles within cluster
-            pg_toplot <- reactive({
-                req(pg_cluster)
-                my_prot_cl <- pg_cluster()
-                if (!is.null(input$c_gene) & length(input$c_gene) != 0) {
-                    my_prot_cl[
-                        my_prot_cl$`Gene names` %in% input$c_gene |
-                            my_prot_cl$`Protein IDs` %in% input$c_gene, "col"] <- "black"
-                    my_prot_cl[
-                        my_prot_cl$`Gene names` %in% input$c_gene |
-                            my_prot_cl$`Protein IDs` %in% input$c_gene, "size"] <- 1
-                }
-                my_prot_cl
-            })
-            
-            observe({
-                print(paste("To plot table:", dim(pg_toplot())))
-            })
+            #observe({
+            #    print(paste("Cluster table:", dim(pg_cluster())))
+            #})
+            #
+            ## Colour code specific protein profiles within cluster
+            #pg_toplot <- reactive({
+            #    req(pg_cluster)
+            #    my_prot_cl <- pg_cluster()
+            #    if (!is.null(input$c_gene) & length(input$c_gene) != 0) {
+            #        my_prot_cl[
+            #            my_prot_cl$`Gene names` %in% input$c_gene |
+            #                my_prot_cl$`Protein IDs` %in% input$c_gene, "col"] <- "black"
+            #        my_prot_cl[
+            #            my_prot_cl$`Gene names` %in% input$c_gene |
+            #                my_prot_cl$`Protein IDs` %in% input$c_gene, "size"] <- 1
+            #    }
+            #    my_prot_cl
+            #})
+            #
+            #observe({
+            #    print(paste("To plot table:", dim(pg_toplot())))
+            #})
             
             ## Generate the scaled protein cluster profiles
             #observe({
