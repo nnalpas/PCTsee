@@ -39,7 +39,7 @@ ui <- dashboardPagePlus(
                         )
                     ),
                     column(
-                        width = 3,
+                        width = 2,
                         selectInput(
                             inputId = "p_gene",
                             label = "Gene names / Protein IDs",
@@ -48,7 +48,16 @@ ui <- dashboardPagePlus(
                         )
                     ),
                     column(
-                        width = 3,
+                        width = 2,
+                        selectInput(
+                            inputId = "p_xaxis",
+                            label = "Sample type",
+                            choices = NULL,
+                            multiple = FALSE
+                        )
+                    ),
+                    column(
+                        width = 2,
                         selectInput(
                             inputId = "p_yaxis",
                             label = "Abundance type",

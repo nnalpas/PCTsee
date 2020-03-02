@@ -17,10 +17,10 @@ server <- function(input, output, session) {
         readRDS(file = paste0("../inst/extdata/", input$dataset))
     })
     
-    observe({
-        print(paste0("crossmap: ", dim(my_data()$crossmap), "; pg: ", dim(my_data()$protein)))
-        print(colnames(my_data()$protein))
-    })
+    #observe({
+    #    print(paste0("crossmap: ", dim(my_data()$crossmap), "; pg: ", dim(my_data()$protein)))
+    #    print(colnames(my_data()$protein))
+    #})
     
     # 
     my_genes <- reactive({
@@ -28,6 +28,13 @@ server <- function(input, output, session) {
             dplyr::arrange(., value) %>%
             .[["value"]] %>%
             unique(.)
+    })
+    
+    # 
+    my_sample_cols <- reactive({
+        colnames(my_data()$protein)[
+            !colnames(my_data()$protein) %in% c(
+                "id", "value", "Label", "key_no_lab", "Replicates")]
     })
     
     # 
@@ -50,6 +57,13 @@ server <- function(input, output, session) {
         
         updateSelectInput(
             session = session,
+            inputId = "p_xaxis",
+            label = "Sample type",
+            choices = my_sample_cols()
+        )
+        
+        updateSelectInput(
+            session = session,
             inputId = "p_yaxis",
             label = "Abundance type",
             choices = my_abund_cols()
@@ -65,16 +79,16 @@ server <- function(input, output, session) {
         my_id <- unique(my_data()$crossmap[
             my_data()$crossmap$value == input$p_gene, ][["id"]])
         
-        x_axis <- "Duration"
-        y_axis <- input$p_yaxis
+        #x_axis <- "Duration"
+        #y_axis <- input$p_yaxis
         
         if (length(my_id) == 1) {
             
             my_res <- duration_plot(
                 target = my_id,
                 df = my_data()$protein,
-                x = x_axis,
-                y = y_axis,
+                x = input$p_xaxis,
+                y = input$p_yaxis,
                 add_cols = add_cols)
             return(my_res)
             

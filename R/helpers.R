@@ -26,6 +26,7 @@ duration_plot <- function(
         data = toplot %>% dplyr::filter(., !is.na(Experiment)),
         mapping = aes(
             x = !!as.name(x), y = as.numeric(value),
+            group = paste(Replicates, Label),
             fill = Replicates, colour = Replicates,
             shape = Label)) +
         geom_line() +
@@ -33,7 +34,7 @@ duration_plot <- function(
         theme_pubr() +
         theme(legend.position = "right") +
         labs(
-            x = "Duration (h)",
+            x = x,
             y = y,
             colour = "Replicates",
             fill = "Replicates",
