@@ -147,9 +147,10 @@ ui <- dashboardPagePlus(
                             step = 1
                         ),
                         selectInput(
-                            inputId = "c_impute",
-                            label = "Impute missing abundances",
-                            choices = c("Not yet implemented"),
+                            inputId = "c_normalise",
+                            label = "Normalise abundances",
+                            choices = c(
+                                Yes = TRUE, No = FALSE),
                             multiple = FALSE
                         ),
                         selectInput(
@@ -157,7 +158,10 @@ ui <- dashboardPagePlus(
                             label = "Gene names / Protein IDs",
                             choices = NULL,
                             multiple = TRUE
-                        )
+                        ),
+                        actionButton(
+                            inputId = "c_apply",
+                            label = "Apply")
                     ),
                     column(
                         width = 8,
