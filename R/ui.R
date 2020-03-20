@@ -5,7 +5,7 @@
 
 # Define the UI as a function for compatibility with shiny app
 ui <- dashboardPagePlus(
-    header = dashboardHeaderPlus(title = "PCTshowoff"),
+    header = dashboardHeaderPlus(title = "PCTsee"),
     sidebar = dashboardSidebar(
         sidebarMenu(
             id = "sbMenu",
