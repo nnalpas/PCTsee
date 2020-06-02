@@ -15,6 +15,11 @@ ui <- dashboardPagePlus(
                 icon = shiny::icon("chart-line"),
                 selected = TRUE),
             menuItem(
+                text = "ProtVista",
+                tabName = "protvista",
+                icon = shiny::icon("map-signs"),
+                selected = FALSE),
+            menuItem(
                 text = "Cluster",
                 tabName = "cluster",
                 icon = shiny::icon("stream"),
@@ -108,6 +113,69 @@ ui <- dashboardPagePlus(
                         align = "center",
                         DTOutput("p_prot_info")
                     )
+                )
+            ),
+            tabItem(
+                tabName = "protvista",
+                fluidRow(
+                    column(
+                        width = 3,
+                        selectizeInput(
+                            inputId = "pv_uniid",
+                            label = "UniProt Accession ID",
+                            choices = NULL,
+                            multiple = FALSE,
+                            options = list(create = TRUE)
+                        )
+                    ),
+                    column(
+                        width = 3,
+                        actionButton(
+                            inputId = "pv_start",
+                            label = "Show")
+                    )
+                ),
+                br(),
+                fluidRow(
+                    tags$head(tags$script(src='http://ebi-uniprot.github.io/CDN/protvista/protvista.js')),
+                    tags$head(tags$link(rel="stylesheet", type = "text/css", href = "http://ebi-uniprot.github.io/CDN/protvista/css/main.css")),
+                    tags$body(
+                        HTML(
+                            paste0(
+                                "<div id='yourDiv'/>
+                                <script>
+                                window.onload = function() {
+                                    document.getElementById('pv_start').onclick = function fun_protvista() {
+                                        var yourDiv = document.getElementById('yourDiv');
+                                        var ProtVista = require('ProtVista');
+                                        var selectacc = document.getElementById('pv_uniid').value;
+                                        var instance = new ProtVista({
+                                            el: yourDiv,
+                                            uniprotacc: selectacc
+                                        });
+                                    }
+                                }
+                                </script>
+                                </div id='yourDiv'>")
+                            #paste0(
+                            #    "<div id='yourDiv'>
+                            #    <script>
+                            #    window.onload = function() {
+                            #        document.getElementById('pv_uniid').onchange = function fun_protvista() {
+                            #            var yourDiv = document.getElementById('yourDiv');
+                            #            var ProtVista = require('ProtVista');
+                            #            var selectacc = document.getElementById('pv_uniid').value;
+                            #            var instance = new ProtVista({
+                            #                el: yourDiv,
+                            #                uniprotacc: selectacc
+                            #            });
+                            #        }
+                            #    }
+                            #    </script>
+                            #    </div id='yourDiv'>")
+                        )
+                    ),
+                    width = 800, height = 800
                 )
             ),
             tabItem(
