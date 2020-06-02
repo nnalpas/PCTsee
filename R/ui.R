@@ -28,7 +28,7 @@ ui <- dashboardPagePlus(
                 tabName = "profile",
                 fluidRow(
                     column(
-                        width = 6,
+                        width = 8,
                         selectInput(
                             inputId = "dataset",
                             label = "Select a PCT dataset (few seconds to load)",
@@ -39,14 +39,16 @@ ui <- dashboardPagePlus(
                         )
                     ),
                     column(
-                        width = 2,
+                        width = 4,
                         selectInput(
                             inputId = "p_gene",
                             label = "Gene names / Protein IDs",
                             choices = NULL,
                             multiple = FALSE
                         )
-                    ),
+                    )
+                ),
+                fluidRow(
                     column(
                         width = 2,
                         selectInput(
@@ -61,6 +63,33 @@ ui <- dashboardPagePlus(
                         selectInput(
                             inputId = "p_yaxis",
                             label = "Abundance type",
+                            choices = NULL,
+                            multiple = FALSE
+                        )
+                    ),
+                    #column(
+                    #    width = 2,
+                    #    selectInput(
+                    #        inputId = "p_group",
+                    #        label = "Group per",
+                    #        choices = NULL,
+                    #        multiple = TRUE
+                    #    )
+                    #),
+                    column(
+                        width = 2,
+                        selectInput(
+                            inputId = "p_colour",
+                            label = "Colour per",
+                            choices = NULL,
+                            multiple = FALSE
+                        )
+                    ),
+                    column(
+                        width = 2,
+                        selectInput(
+                            inputId = "p_shape",
+                            label = "Point shape per",
                             choices = NULL,
                             multiple = FALSE
                         )

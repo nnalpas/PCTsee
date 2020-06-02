@@ -46,6 +46,13 @@ server <- function(input, output, session) {
     })
     
     # 
+    my_group_cols <- reactive({
+        colnames(my_data()$protein)[
+            !colnames(my_data()$protein) %in% c(
+                "id", "value", "key_no_lab")]
+    })
+    
+    # 
     observe({
         
         updateSelectInput(
@@ -69,6 +76,27 @@ server <- function(input, output, session) {
             choices = my_abund_cols()
         )
         
+        #updateSelectInput(
+        #    session = session,
+        #    inputId = "p_group",
+        #    label = "Group per",
+        #    choices = my_group_cols()
+        #)
+        
+        updateSelectInput(
+            session = session,
+            inputId = "p_colour",
+            label = "Colour per",
+            choices = my_group_cols()
+        )
+        
+        updateSelectInput(
+            session = session,
+            inputId = "p_shape",
+            label = "Point shape per",
+            choices = my_group_cols()
+        )
+        
     })
     
     # 
@@ -89,6 +117,9 @@ server <- function(input, output, session) {
                 df = my_data()$protein,
                 x = input$p_xaxis,
                 y = input$p_yaxis,
+                #group = input$p_group,
+                colour = input$p_colour,
+                shape = input$p_shape,
                 add_cols = add_cols)
             return(my_res)
             
