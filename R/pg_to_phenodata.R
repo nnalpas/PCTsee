@@ -11,7 +11,8 @@ library(lubridate)
 library(stringr)
 
 # 
-my_pg_path <- "S:/processing/Fabio/HipA turnover triplicates/combined/txt/proteinGroups.txt"
+#my_pg_path <- "S:/processing/Fabio/HipA turnover triplicates/combined/txt/proteinGroups.txt"
+my_pg_path <- "T:/User/Phil/SCy004 Phosphoproteome Hagemann/PCTsee SCy004/txt/proteinGroups.txt"
 
 #
 my_pg <- data.table::fread(
@@ -20,7 +21,8 @@ my_pg <- data.table::fread(
     data.table = FALSE, na.strings = "NaN")
 
 # 
-my_pheno_path <- "C:/Users/kxmna01/Dropbox/Home_work_sync/Work/Colleagues shared work/Fabio/HipA-HipB/HipA/Phenodata.txt"
+#my_pheno_path <- "C:/Users/kxmna01/Dropbox/Home_work_sync/Work/Colleagues shared work/Fabio/HipA-HipB/HipA/Phenodata.txt"
+my_pheno_path <- "T:/User/Phil/SCy004 Phosphoproteome Hagemann/PCTsee SCy004/phenodata.txt"
 
 # 
 my_pheno <- data.table::fread(
@@ -34,7 +36,17 @@ my_pheno_filt <- my_pheno %>%
     unique(.)
 
 #
+if (any(grepl("Label", colnames(my_pheno_filt)))) {
+    
+    my_pheno_filt %<>%
+        tidyr::separate_rows(
+            data = ., tidyselect::starts_with("Label"),
+            sep = ";", convert = TRUE)
+    
+}
+
 if (any(grepl("Time", colnames(my_pheno_filt)))) {
+    
     my_pheno_filt %<>%
         tidyr::separate(
             data = ., col = Time, into = c("Time value", "Time unit"),
@@ -45,6 +57,7 @@ if (any(grepl("Time", colnames(my_pheno_filt)))) {
             Duration = as.numeric(
                 duration(num = `Time value`, units = `Time unit`),
                 "hours"))
+
 }
 
 # 
@@ -89,7 +102,7 @@ my_pg_label <- my_pg_exp %>%
 
 my_pg_final <- my_pg_label %>%
     dplyr::select(., -key_no_exp, -key) %>%
-    dplyr::left_join(x = ., y = my_pheno_filt, by = "Experiment")
+    dplyr::left_join(x = ., y = my_pheno_filt)
 
 my_cross_map <- my_pg_final %>%
     dplyr::filter(., key_no_lab %in% c("Protein IDs", "Gene names")) %>%
@@ -100,7 +113,7 @@ my_cross_map <- my_pg_final %>%
 
 saveRDS(
     object = list(protein = my_pg_final, crossmap = my_cross_map),
-    file = "C:/Users/kxmna01/Documents/GitHub/PCTshowoff/inst/extdata/HipA.RDS",
+    file = "T:/User/Phil/SCy004 Phosphoproteome Hagemann/PCTsee SCy004/SCy004.RDS",
     compress = "gzip")
 
 
