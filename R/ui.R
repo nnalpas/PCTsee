@@ -137,8 +137,8 @@ ui <- dashboardPagePlus(
                 ),
                 br(),
                 fluidRow(
-                    tags$head(tags$script(src='http://ebi-uniprot.github.io/CDN/protvista/protvista.js')),
-                    tags$head(tags$link(rel="stylesheet", type = "text/css", href = "http://ebi-uniprot.github.io/CDN/protvista/css/main.css")),
+                    tags$head(tags$script(src='https://ebi-uniprot.github.io/CDN/protvista/protvista.js')),
+                    tags$head(tags$link(rel="stylesheet", type = "text/css", href = "https://ebi-uniprot.github.io/CDN/protvista/css/main.css")),
                     tags$body(
                         HTML(
                             paste0(
@@ -157,22 +157,6 @@ ui <- dashboardPagePlus(
                                 }
                                 </script>
                                 </div id='yourDiv'>")
-                            #paste0(
-                            #    "<div id='yourDiv'>
-                            #    <script>
-                            #    window.onload = function() {
-                            #        document.getElementById('pv_uniid').onchange = function fun_protvista() {
-                            #            var yourDiv = document.getElementById('yourDiv');
-                            #            var ProtVista = require('ProtVista');
-                            #            var selectacc = document.getElementById('pv_uniid').value;
-                            #            var instance = new ProtVista({
-                            #                el: yourDiv,
-                            #                uniprotacc: selectacc
-                            #            });
-                            #        }
-                            #    }
-                            #    </script>
-                            #    </div id='yourDiv'>")
                         )
                     ),
                     width = 800, height = 800
