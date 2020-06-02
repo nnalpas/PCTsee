@@ -6,6 +6,8 @@ duration_plot <- function(
     df,
     x,
     y,
+    colour,
+    shape,
     add_cols) {
     
     toplot <- df %>%
@@ -25,10 +27,12 @@ duration_plot <- function(
     pl <- ggplot(
         data = toplot %>% dplyr::filter(., !is.na(Experiment)),
         mapping = aes(
-            x = !!as.name(x), y = as.numeric(value),
-            group = paste(Replicates, Label),
-            fill = Replicates, colour = Replicates,
-            shape = Label)) +
+            x = !!as.name(x),
+            y = as.numeric(value),
+            #group = paste(group, collapse = " "),
+            fill = !!as.name(colour),
+            colour = !!as.name(colour),
+            shape = !!as.name(shape))) +
         geom_line() +
         geom_point() +
         theme_pubr() +
