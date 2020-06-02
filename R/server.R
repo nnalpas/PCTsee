@@ -31,6 +31,15 @@ server <- function(input, output, session) {
     })
     
     # 
+    my_uniid <- reactive({
+        my_data()$crossmap %>%
+            dplyr::filter(., key_no_lab == "Protein IDs") %>%
+            dplyr::arrange(., value) %>%
+            .[["value"]] %>%
+            unique(.)
+    })
+    
+    # 
     my_sample_cols <- reactive({
         colnames(my_data()$protein)[
             !colnames(my_data()$protein) %in% c(
@@ -100,9 +109,23 @@ server <- function(input, output, session) {
     })
     
     # 
+    observe({
+        
+        updateSelectInput(
+            session = session,
+            inputId = "pv_uniid",
+            label = "UniProt Accession ID",
+            choices = my_uniid()
+        )
+        
+    })
+    
+    
+    
+    # This section correpond to profile view
     my_profiles <- reactive({
         
-        req(input$p_gene, input$p_yaxis)
+        req(input$p_gene, input$p_xaxis, input$p_yaxis)
         
         my_id <- unique(my_data()$crossmap[
             my_data()$crossmap$value == input$p_gene, ][["id"]])
@@ -143,6 +166,10 @@ server <- function(input, output, session) {
         )
         
     })
+    
+    
+    
+    # This section corresponds to protvista, but is entirely within the UI
     
     
     
