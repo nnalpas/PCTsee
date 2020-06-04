@@ -74,14 +74,14 @@ server <- function(input, output, session) {
         updateSelectInput(
             session = session,
             inputId = "p_xaxis",
-            label = "Sample type",
+            label = "X-axis",
             choices = my_sample_cols()
         )
         
         updateSelectInput(
             session = session,
             inputId = "p_yaxis",
-            label = "Abundance type",
+            label = "Y-axis",
             choices = my_abund_cols()
         )
         
@@ -143,7 +143,8 @@ server <- function(input, output, session) {
                 #group = input$p_group,
                 colour = input$p_colour,
                 shape = input$p_shape,
-                add_cols = add_cols)
+                add_cols = add_cols,
+                add_ref_value = input$p_add_ref)
             return(my_res)
             
         } else (

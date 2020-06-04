@@ -58,7 +58,7 @@ ui <- dashboardPagePlus(
                         width = 2,
                         selectInput(
                             inputId = "p_xaxis",
-                            label = "Sample type",
+                            label = "X-axis",
                             choices = NULL,
                             multiple = FALSE
                         )
@@ -67,7 +67,7 @@ ui <- dashboardPagePlus(
                         width = 2,
                         selectInput(
                             inputId = "p_yaxis",
-                            label = "Abundance type",
+                            label = "Y-axis",
                             choices = NULL,
                             multiple = FALSE
                         )
@@ -97,6 +97,14 @@ ui <- dashboardPagePlus(
                             label = "Point shape per",
                             choices = NULL,
                             multiple = FALSE
+                        )
+                    ),
+                    column(
+                        width = 2,
+                        checkboxInput(
+                            inputId = "p_add_ref",
+                            label = "Add reference ratio",
+                            value = FALSE
                         )
                     )
                 ),
