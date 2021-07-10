@@ -111,8 +111,16 @@ my_cross_map <- my_pg_final %>%
         data = ., value, sep = ";", convert = TRUE) %>%
     dplyr::filter(., !is.na(value) & value != "")
 
+# This must be customised for every dataset
+my_default <- list(
+    `Gene names / Protein IDs` = c(`sll0242 (default)` = "sll0242"),
+    `X-axis` = c(`Label duration (default)` = "Label duration"),
+    `Y-axis` = c(`Intensity (default)` = "Intensity"),
+    `Colour per` = c(`Experiment (default)` = "Experiment"),
+    `Point shape per` = c(`Experiment (default)` = "Experiment"))
+
 saveRDS(
-    object = list(protein = my_pg_final, crossmap = my_cross_map),
+    object = list(protein = my_pg_final, crossmap = my_cross_map, default = my_default),
     file = "T:/User/Phil/SCy004 Phosphoproteome Hagemann/PCTsee SCy004/SCy004.RDS",
     compress = "gzip")
 
