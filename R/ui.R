@@ -4,8 +4,8 @@
 ### Create UI framework --------------------------------------------------
 
 # Define the UI as a function for compatibility with shiny app
-ui <- dashboardPage(
-    header = dashboardHeader(title = "PCTsee"),
+ui <- dashboardPagePlus(
+    header = dashboardHeaderPlus(title = "PCTsee"),
     sidebar = dashboardSidebar(
         shinybusy::add_busy_spinner(
             spin = "fading-circle",
