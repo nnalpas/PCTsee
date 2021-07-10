@@ -27,7 +27,9 @@ server <- function(input, output, session) {
         my_data()$crossmap %>%
             dplyr::arrange(., value) %>%
             .[["value"]] %>%
-            unique(.)
+            unique(.) %>%
+            set_names(x = ., value = .) %>%
+            c(my_data()$default$`Gene names / Protein IDs`, .)
     })
     
     # 
@@ -36,14 +38,17 @@ server <- function(input, output, session) {
             dplyr::filter(., key_no_lab == "Protein IDs") %>%
             dplyr::arrange(., value) %>%
             .[["value"]] %>%
-            unique(.)
+            unique(.) %>%
+            set_names(x = ., value = .)
     })
     
     # 
     my_sample_cols <- reactive({
         colnames(my_data()$protein)[
             !colnames(my_data()$protein) %in% c(
-                "id", "value", "Label", "key_no_lab", "Replicates")]
+                "id", "value", "Label", "key_no_lab", "Replicates")] %>%
+            set_names(x = ., value = .) %>%
+            c(my_data()$default$`X-axis`, .)
     })
     
     # 
@@ -51,14 +56,18 @@ server <- function(input, output, session) {
         my_data()$protein %>%
             dplyr::filter(., !is.na(Experiment)) %>%
             .[["key_no_lab"]] %>%
-            unique(.)
+            unique(.) %>%
+            set_names(x = ., value = .) %>%
+            c(my_data()$default$`Y-axis`, .)
     })
     
     # 
     my_group_cols <- reactive({
         colnames(my_data()$protein)[
             !colnames(my_data()$protein) %in% c(
-                "id", "value", "key_no_lab")]
+                "id", "value", "key_no_lab")] %>%
+            set_names(x = ., value = .) %>%
+            c(my_data()$default$`Colour per`, .)
     })
     
     # 
