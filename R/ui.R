@@ -33,9 +33,44 @@ ui <- dashboardPage(
         )
     ),
     body = dashboardBody(
+        tags$head(tags$style(HTML("
+            .skin-black .main-header .logo {
+                color:#fff;
+                background-color: #222D32;}
+            .skin-black .main-header .logo:hover {
+                color: #222D32;
+                background-color: #fff;}
+            .skin-black .main-header .navbar {
+                background-color: #222D32;}
+            .content-wrapper, .right-side {
+                background-color: #b2b2b8;}
+            .skin-black .main-header .navbar .sidebar-toggle{
+                color:#fff;
+                background-color: #222D32;}
+            .skin-black .main-header .navbar .sidebar-toggle:hover{
+                color: #222D32;
+                background-color: #fff;}
+            .skin-black .main-sidebar .sidebar .sidebar-menu .active a{
+                color: #222D32;
+                background-color: #fff;}
+            .box.box-solid>.box-header {
+                color:#fff;
+                background:#222D32;
+                box-shadow: 0px 5px 2px -5px grey;}
+            .box.box-solid{
+                /*border-style: dotted;
+                border-width: 2px;
+                border-color: #222D32;*/
+                border-bottom-color:#222D32;
+                border-left-color:#222D32;
+                border-right-color:#222D32;
+                border-top-color:#222D32;
+                box-shadow: 5px 5px 2px grey;}
+        "))),
         tabItems(
             tabItem(
                 tabName = "profile",
+                box(
                 fluidRow(
                     column(
                         width = 8,
@@ -112,6 +147,9 @@ ui <- dashboardPage(
                             value = FALSE
                         )
                     )
+                ), title = "Parameters", width = 12, collapsible = TRUE,
+                solidHeader = TRUE#,
+                #style = "background-color:  #222D32; box-shadow: 5px 5px 2px grey;"
                 ),
                 br(),
                 br(),
@@ -119,12 +157,22 @@ ui <- dashboardPage(
                     column(
                         width = 8,
                         align = "center",
-                        plotlyOutput("p_profile")
+                        box(
+                            plotlyOutput("p_profile"),
+                            title = "Visualisation",
+                            width = 12, solidHeader = TRUE#,
+                            #style = "background-color:  #222D32; box-shadow: 5px 5px 2px grey;"
+                            )
                     ),
                     column(
                         width = 4,
                         align = "center",
-                        DTOutput("p_prot_info")
+                        box(
+                            DTOutput("p_prot_info"),
+                            title = "Information",
+                            width = 12, solidHeader = TRUE#,
+                            #style = "background-color:  #222D32; box-shadow: 5px 5px 2px grey;"
+                            )
                     )
                 )
             ),
