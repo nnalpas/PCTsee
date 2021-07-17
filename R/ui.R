@@ -29,11 +29,75 @@ ui <- dashboardPage(
                 tabName = "cluster",
                 icon = shiny::icon("stream"),
                 selected = FALSE
-            )
+            )#,
+            #br(),
+            #hr(),
+            #tags$h4("Parameters"),
+            #conditionalPanel(
+            #    'input.sbMenu == "profile"',
+            #    div(style = "padding: 0px 0px; margin-top: -1em",
+            #        selectInput(
+            #            inputId = "dataset",
+            #            label = "Select a dataset",
+            #            choices = list.files(
+            #                path = "../inst/extdata", pattern = "\\.RDS"),
+            #            multiple = FALSE,
+            #            width = "100%"
+            #        )
+            #    ),
+            #    div(style = "padding: 0px 0px; margin-top: -1em",
+            #        selectInput(
+            #            inputId = "p_gene",
+            #            label = "Gene names / Protein IDs",
+            #            choices = NULL,
+            #            multiple = FALSE
+            #        )
+            #    ),
+            #    div(style = "padding: 0px 0px; margin-top: -1em",
+            #        selectInput(
+            #            inputId = "p_xaxis",
+            #            label = "X-axis",
+            #            choices = NULL,
+            #            multiple = FALSE
+            #        )
+            #    ),
+            #    div(style = "padding: 0px 0px; margin-top: -1em",
+            #        selectInput(
+            #            inputId = "p_yaxis",
+            #            label = "Y-axis",
+            #            choices = NULL,
+            #            multiple = FALSE
+            #        )
+            #    ),
+            #    div(style = "padding: 0px 0px; margin-top: -1em",
+            #        selectInput(
+            #            inputId = "p_colour",
+            #            label = "Colour per",
+            #            choices = NULL,
+            #            multiple = FALSE
+            #        )
+            #    ),
+            #    div(style = "padding: 0px 0px; margin-top: -1em",
+            #        selectInput(
+            #            inputId = "p_shape",
+            #            label = "Point shape per",
+            #            choices = NULL,
+            #            multiple = FALSE
+            #        )
+            #    ),
+            #    div(style = "padding: 0px 0px; margin-top: -1em",
+            #        checkboxInput(
+            #            inputId = "p_add_ref",
+            #            label = "Add reference ratio",
+            #            value = FALSE
+            #        )
+            #    )
+            #)
         )
     ),
     body = dashboardBody(
         tags$head(tags$style(HTML("
+            hr {border-top: 2px solid #fff;}
             .skin-black .main-header .logo {
                 color:#fff;
                 background-color: #222D32;}
@@ -54,17 +118,18 @@ ui <- dashboardPage(
                 color: #222D32;
                 background-color: #fff;}
             .box.box-solid>.box-header {
+                text-align: center;
                 color:#fff;
                 background:#222D32;
                 box-shadow: 0px 5px 2px -5px grey;}
             .box.box-solid{
-                /*border-style: dotted;
+                border-style: solid;
                 border-width: 2px;
-                border-color: #222D32;*/
-                border-bottom-color:#222D32;
+                border-color: #222D32;
+                /*border-bottom-color:#222D32;
                 border-left-color:#222D32;
                 border-right-color:#222D32;
-                border-top-color:#222D32;
+                border-top-color:#222D32;*/
                 box-shadow: 5px 5px 2px grey;}
         "))),
         tabItems(
@@ -148,8 +213,7 @@ ui <- dashboardPage(
                         )
                     )
                 ), title = "Parameters", width = 12, collapsible = TRUE,
-                solidHeader = TRUE#,
-                #style = "background-color:  #222D32; box-shadow: 5px 5px 2px grey;"
+                solidHeader = TRUE
                 ),
                 br(),
                 br(),
@@ -160,8 +224,7 @@ ui <- dashboardPage(
                         box(
                             plotlyOutput("p_profile"),
                             title = "Visualisation",
-                            width = 12, solidHeader = TRUE#,
-                            #style = "background-color:  #222D32; box-shadow: 5px 5px 2px grey;"
+                            width = 12, solidHeader = TRUE
                             )
                     ),
                     column(
@@ -170,8 +233,7 @@ ui <- dashboardPage(
                         box(
                             DTOutput("p_prot_info"),
                             title = "Information",
-                            width = 12, solidHeader = TRUE#,
-                            #style = "background-color:  #222D32; box-shadow: 5px 5px 2px grey;"
+                            width = 12, solidHeader = TRUE
                             )
                     )
                 )
