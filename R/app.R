@@ -7,11 +7,11 @@
 rm(list = ls())
 
 #setwd("C:/Users/kxmna01/Documents/GitHub/PCTsee/R/")
-setwd("C:/Users/nalpa/Documents/GitHub/PCTsee/R/")
+setwd("C:/Users/nalpa/Documents/GitHub/PCTsee")
 #setwd("./R/")
 
 # Source the user's general functions used across this script
-source(file = "helpers.R")
+source(file = "./R/helpers.R")
 
 # Load the required packages (or install if not already in library)
 library(magrittr)
@@ -42,10 +42,10 @@ library(shiny)
 # Source the UI and server scripts
 source(
     file = paste0(
-        "ui.R"))
+        "./R/ui.R"))
 source(
     file = paste0(
-        "server.R"))
+        "./R/server.R"))
 
 # Make a shiny APP
 app <- shinyApp(ui, server)

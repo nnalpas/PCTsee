@@ -143,7 +143,7 @@ ui <- dashboardPage(
                             inputId = "dataset",
                             label = "Select a PCT dataset (few seconds to load)",
                             choices = list.files(
-                                path = "../inst/extdata", pattern = "\\.RDS"),
+                                path = "./inst/extdata", pattern = "\\.RDS"),
                             multiple = FALSE,
                             width = "100%"
                         )

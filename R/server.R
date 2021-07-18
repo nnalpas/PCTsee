@@ -14,7 +14,7 @@ server <- function(input, output, session) {
     
     # Import the PCT data
     my_data <- eventReactive(input$dataset, {
-        readRDS(file = paste0("../inst/extdata/", input$dataset))
+        readRDS(file = paste0("./inst/extdata/", input$dataset))
     })
     
     #observe({
@@ -187,7 +187,7 @@ server <- function(input, output, session) {
     # Display the work in progress
     output$inprogress <- renderImage({
         list(
-            src = file.path("../inst/www/inprogress.png"),
+            src = file.path("./inst/www/inprogress.png"),
             height = "600px",
             alt = "Work in progress")
     }, deleteFile = FALSE)
