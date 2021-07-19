@@ -8,7 +8,8 @@ duration_plot <- function(
     y,
     colour,
     shape,
-    add_cols) {
+    add_cols,
+    add_ref_value) {
     
     toplot <- df %>%
         dplyr::filter(., key_no_lab == y & id == target)
@@ -23,6 +24,28 @@ duration_plot <- function(
             ., key_no_lab %in% add_cols & is.na(Experiment) & id == target) %>%
         dplyr::select(., parameter = key_no_lab, value) %>%
         dplyr::bind_rows(., toplot_df)
+    
+    if (add_ref_value & grepl("\\/L$", toplot$Label)) {
+        
+        lab_refs <- toplot %>%
+            dplyr::filter(., !is.na(`Label reference`)) %>%
+            .[["Label reference"]] %>%
+            unique(.)
+        references <- df %>%
+            dplyr::filter(
+                ., `Label reference` %in% lab_refs &
+                    id == target & Label %in% lab_refs)
+        references_format <- references %>%
+            dplyr::mutate(
+                ., Label = paste0(Label, "/", Label),
+                value = "1",
+                key_no_lab = y) %>%
+            unique(.)
+        
+        toplot %<>%
+            dplyr::bind_rows(., references_format)
+        
+    }
     
     pl <- ggplot(
         data = toplot %>% dplyr::filter(., !is.na(Experiment)),
@@ -40,9 +63,9 @@ duration_plot <- function(
         labs(
             x = x,
             y = y,
-            colour = "Replicates",
-            fill = "Replicates",
-            shape = "Labels")
+            colour = colour,
+            fill = colour,
+            shape = shape)
     
     dt <- DT::datatable(toplot_df, rownames = FALSE)
     

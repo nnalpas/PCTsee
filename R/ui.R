@@ -4,9 +4,14 @@
 ### Create UI framework --------------------------------------------------
 
 # Define the UI as a function for compatibility with shiny app
-ui <- dashboardPagePlus(
-    header = dashboardHeaderPlus(title = "PCTsee"),
+ui <- dashboardPage(
+    header = dashboardHeader(title = "PCTsee"),
     sidebar = dashboardSidebar(
+        shinybusy::add_busy_spinner(
+            spin = "fading-circle",
+            timeout = 200,
+            position = "bottom-right",
+            onstart = TRUE),
         sidebarMenu(
             id = "sbMenu",
             menuItem(
@@ -24,13 +29,113 @@ ui <- dashboardPagePlus(
                 tabName = "cluster",
                 icon = shiny::icon("stream"),
                 selected = FALSE
-            )
+            )#,
+            #br(),
+            #hr(),
+            #tags$h4("Parameters"),
+            #conditionalPanel(
+            #    'input.sbMenu == "profile"',
+            #    div(style = "padding: 0px 0px; margin-top: -1em",
+            #        selectInput(
+            #            inputId = "dataset",
+            #            label = "Select a dataset",
+            #            choices = list.files(
+            #                path = "../inst/extdata", pattern = "\\.RDS"),
+            #            multiple = FALSE,
+            #            width = "100%"
+            #        )
+            #    ),
+            #    div(style = "padding: 0px 0px; margin-top: -1em",
+            #        selectInput(
+            #            inputId = "p_gene",
+            #            label = "Gene names / Protein IDs",
+            #            choices = NULL,
+            #            multiple = FALSE
+            #        )
+            #    ),
+            #    div(style = "padding: 0px 0px; margin-top: -1em",
+            #        selectInput(
+            #            inputId = "p_xaxis",
+            #            label = "X-axis",
+            #            choices = NULL,
+            #            multiple = FALSE
+            #        )
+            #    ),
+            #    div(style = "padding: 0px 0px; margin-top: -1em",
+            #        selectInput(
+            #            inputId = "p_yaxis",
+            #            label = "Y-axis",
+            #            choices = NULL,
+            #            multiple = FALSE
+            #        )
+            #    ),
+            #    div(style = "padding: 0px 0px; margin-top: -1em",
+            #        selectInput(
+            #            inputId = "p_colour",
+            #            label = "Colour per",
+            #            choices = NULL,
+            #            multiple = FALSE
+            #        )
+            #    ),
+            #    div(style = "padding: 0px 0px; margin-top: -1em",
+            #        selectInput(
+            #            inputId = "p_shape",
+            #            label = "Point shape per",
+            #            choices = NULL,
+            #            multiple = FALSE
+            #        )
+            #    ),
+            #    div(style = "padding: 0px 0px; margin-top: -1em",
+            #        checkboxInput(
+            #            inputId = "p_add_ref",
+            #            label = "Add reference ratio",
+            #            value = FALSE
+            #        )
+            #    )
+            #)
         )
     ),
     body = dashboardBody(
+        tags$head(tags$style(HTML("
+            hr {border-top: 2px solid #fff;}
+            .skin-black .main-header .logo {
+                color:#fff;
+                background-color: #222D32;}
+            .skin-black .main-header .logo:hover {
+                color: #222D32;
+                background-color: #fff;}
+            .skin-black .main-header .navbar {
+                background-color: #222D32;}
+            .content-wrapper, .right-side {
+                background-color: #b2b2b8;}
+            .skin-black .main-header .navbar .sidebar-toggle{
+                color:#fff;
+                background-color: #222D32;}
+            .skin-black .main-header .navbar .sidebar-toggle:hover{
+                color: #222D32;
+                background-color: #fff;}
+            .skin-black .main-sidebar .sidebar .sidebar-menu .active a{
+                color: #222D32;
+                background-color: #fff;}
+            .box.box-solid>.box-header {
+                text-align: center;
+                color:#fff;
+                background:#222D32;
+                box-shadow: 0px 5px 2px -5px grey;}
+            .box.box-solid{
+                border-style: solid;
+                border-width: 2px;
+                border-color: #222D32;
+                /*border-bottom-color:#222D32;
+                border-left-color:#222D32;
+                border-right-color:#222D32;
+                border-top-color:#222D32;*/
+                box-shadow: 5px 5px 2px grey;}
+        "))),
         tabItems(
             tabItem(
                 tabName = "profile",
+                box(
                 fluidRow(
                     column(
                         width = 8,
@@ -38,7 +143,7 @@ ui <- dashboardPagePlus(
                             inputId = "dataset",
                             label = "Select a PCT dataset (few seconds to load)",
                             choices = list.files(
-                                path = "../inst/extdata", pattern = "\\.RDS"),
+                                path = "./inst/extdata", pattern = "\\.RDS"),
                             multiple = FALSE,
                             width = "100%"
                         )
@@ -58,7 +163,7 @@ ui <- dashboardPagePlus(
                         width = 2,
                         selectInput(
                             inputId = "p_xaxis",
-                            label = "Sample type",
+                            label = "X-axis",
                             choices = NULL,
                             multiple = FALSE
                         )
@@ -67,7 +172,7 @@ ui <- dashboardPagePlus(
                         width = 2,
                         selectInput(
                             inputId = "p_yaxis",
-                            label = "Abundance type",
+                            label = "Y-axis",
                             choices = NULL,
                             multiple = FALSE
                         )
@@ -98,7 +203,17 @@ ui <- dashboardPagePlus(
                             choices = NULL,
                             multiple = FALSE
                         )
+                    ),
+                    column(
+                        width = 2,
+                        checkboxInput(
+                            inputId = "p_add_ref",
+                            label = "Add reference ratio",
+                            value = FALSE
+                        )
                     )
+                ), title = "Parameters", width = 12, collapsible = TRUE,
+                solidHeader = TRUE
                 ),
                 br(),
                 br(),
@@ -106,12 +221,20 @@ ui <- dashboardPagePlus(
                     column(
                         width = 8,
                         align = "center",
-                        plotlyOutput("p_profile")
+                        box(
+                            plotlyOutput("p_profile"),
+                            title = "Visualisation",
+                            width = 12, solidHeader = TRUE
+                            )
                     ),
                     column(
                         width = 4,
                         align = "center",
-                        DTOutput("p_prot_info")
+                        box(
+                            DTOutput("p_prot_info"),
+                            title = "Information",
+                            width = 12, solidHeader = TRUE
+                            )
                     )
                 )
             ),
@@ -166,100 +289,9 @@ ui <- dashboardPagePlus(
                 tabName = "cluster",
                 fluidRow(
                     column(
-                        width = 4,
-                        selectInput(
-                            inputId = "c_xaxis",
-                            label = "X-axis (samples to cluster)",
-                            choices = NULL,
-                            multiple = FALSE
-                        ),
-                        selectInput(
-                            inputId = "c_yaxis",
-                            label = "Y-axis (protein abundance)",
-                            choices = NULL,
-                            multiple = FALSE
-                        ),
-                        numericInput(
-                            inputId = "c_kcluster",
-                            label = "Number of k-mean clusters (turn-off with 0)",
-                            value = 1,
-                            min = 0,
-                            step = 1
-                        ),
-                        selectInput(
-                            inputId = "c_samples",
-                            label = "Samples to filter out",
-                            choices = NULL,
-                            multiple = TRUE
-                        ),
-                        selectInput(
-                            inputId = "c_labels",
-                            label = "Labels to filter out",
-                            choices = NULL,
-                            multiple = TRUE
-                        ),
-                        selectInput(
-                            inputId = "c_merge",
-                            label = "Replicates merging method",
-                            choices = c(
-                                Mean = "mean", Median = "median"),
-                            multiple = FALSE
-                        ),
-                        selectInput(
-                            inputId = "c_log",
-                            label = "Transform abundances",
-                            choices = c(
-                                None = NA, Log2 = "log2", Log10 = "log10"),
-                            multiple = FALSE
-                        ),
-                        numericInput(
-                            inputId = "c_filt_perc",
-                            label = "Percentage samples with valid abundance (turn-off with 0)",
-                            value = 0,
-                            min = 0,
-                            max = 1,
-                            step = 0.01
-                        ),
-                        numericInput(
-                            inputId = "c_filt_thres",
-                            label = "Minimum abundance threshold",
-                            value = 0,
-                            min = 0,
-                            step = 1
-                        ),
-                        selectInput(
-                            inputId = "c_normalise",
-                            label = "Normalise abundances",
-                            choices = c(
-                                Yes = TRUE, No = FALSE),
-                            multiple = FALSE
-                        ),
-                        selectInput(
-                            inputId = "c_gene",
-                            label = "Gene names / Protein IDs",
-                            choices = NULL,
-                            multiple = TRUE
-                        ),
-                        actionButton(
-                            inputId = "c_apply",
-                            label = "Apply")
-                    ),
-                    column(
-                        width = 8,
+                        width = 12,
                         align = "center",
-                        plotOutput("c_heatmap")
-                    )
-                ),
-                fluidRow(
-                    column(
-                        width = 6,
-                        align = "center",
-                        plotOutput("c_scaled_cluster")
-                    ),
-                    column(
-                        width = 6,
-                        align = "center",
-                        plotOutput("c_raw_cluster")
+                        imageOutput("inprogress")
                     )
                 )
             )
