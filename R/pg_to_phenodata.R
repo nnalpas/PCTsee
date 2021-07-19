@@ -10,9 +10,13 @@ library(plyr)
 library(lubridate)
 library(stringr)
 
-# 
+source("C:/Users/kxmna01/Documents/GitHub/PCTsee/R/helpers.R")
+
+out_name <- "Parkin_proteome.RDS"
+ 
 #my_pg_path <- "S:/processing/Fabio/HipA turnover triplicates/combined/txt/proteinGroups.txt"
-my_pg_path <- "T:/User/Phil/SCy004 Phosphoproteome Hagemann/PCTsee SCy004/txt/proteinGroups.txt"
+#my_pg_path <- "T:/User/Phil/SCy004 Phosphoproteome Hagemann/PCTsee SCy004/txt/proteinGroups.txt"
+my_pg_path <- "T:/User/Katharina/20210113_Proteome/combined/txt/proteinGroups.txt"
 
 #
 my_pg <- data.table::fread(
@@ -22,7 +26,8 @@ my_pg <- data.table::fread(
 
 # 
 #my_pheno_path <- "C:/Users/kxmna01/Dropbox/Home_work_sync/Work/Colleagues shared work/Fabio/HipA-HipB/HipA/Phenodata.txt"
-my_pheno_path <- "T:/User/Phil/SCy004 Phosphoproteome Hagemann/PCTsee SCy004/phenodata.txt"
+#my_pheno_path <- "T:/User/Phil/SCy004 Phosphoproteome Hagemann/PCTsee SCy004/phenodata.txt"
+my_pheno_path <- "T:/User/Katharina/20210113_Proteome/combined/txt/phenodata.txt"
 
 # 
 my_pheno <- data.table::fread(
@@ -111,9 +116,20 @@ my_cross_map <- my_pg_final %>%
         data = ., value, sep = ";", convert = TRUE) %>%
     dplyr::filter(., !is.na(value) & value != "")
 
+# This must be customised for every dataset
+my_default <- list(
+    `Gene names / Protein IDs` = "Q9Y2S6" %>% set_names(paste(., "(default)")),
+    `X-axis` = "Label duration" %>% set_names(paste(., "(default)")),
+    `Y-axis` = "Intensity" %>% set_names(paste(., "(default)")),
+    `Colour per` = "Cell line" %>% set_names(paste(., "(default)")),
+    `Point shape per` = "Cell line" %>% set_names(paste(., "(default)")))
+
+my_data <- list(
+    protein = my_pg_final, crossmap = my_cross_map, default = my_default)
+
 saveRDS(
-    object = list(protein = my_pg_final, crossmap = my_cross_map),
-    file = "T:/User/Phil/SCy004 Phosphoproteome Hagemann/PCTsee SCy004/SCy004.RDS",
+    object = my_data,
+    file = paste(dirname(my_pg_path), out_name, sep = "/"),
     compress = "gzip")
 
 
