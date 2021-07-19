@@ -32,8 +32,8 @@ duration_plot <- function(
             #group = paste(group, collapse = " "),
             fill = !!as.name(colour),
             colour = !!as.name(colour),
-            shape = !!as.name(shape))) +
-        geom_line() +
+            shape = as.character(!!as.name(shape)))) +
+        geom_smooth(method = "loess", se = TRUE) +
         geom_point() +
         theme_pubr() +
         theme(legend.position = "right") +
