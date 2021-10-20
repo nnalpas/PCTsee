@@ -6,7 +6,7 @@
 # Define the server role as a function for compatibility with shiny app
 server <- function(input, output, session) {
     
-    add_cols <- c(
+    info_cols <- c(
         "Protein IDs", "Majority protein IDs", "Protein names", "Gene names",
         "Sequence coverage [%]", "Q-value", "Score", "Only identified by site")
     
@@ -19,7 +19,7 @@ server <- function(input, output, session) {
     
     # Include OtherName columns if any
     add_cols <- reactive({
-        c(add_cols, grep(
+        c(info_cols, grep(
             "^OtherName", unique(my_data()$protein$key_no_lab), value = TRUE))
     })
     
