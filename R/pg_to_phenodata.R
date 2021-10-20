@@ -12,11 +12,12 @@ library(stringr)
 
 source("C:/Users/kxmna01/Documents/GitHub/PCTsee/R/helpers.R")
 
-out_name <- "Parkin_proteome.RDS"
+out_name <- "Srim_G7_proteome.RDS"
  
 #my_pg_path <- "S:/processing/Fabio/HipA turnover triplicates/combined/txt/proteinGroups.txt"
 #my_pg_path <- "T:/User/Phil/SCy004 Phosphoproteome Hagemann/PCTsee SCy004/txt/proteinGroups.txt"
-my_pg_path <- "T:/User/Katharina/20210113_Proteome/combined/txt/proteinGroups.txt"
+#my_pg_path <- "T:/User/Katharina/20210113_Proteome/combined/txt/proteinGroups.txt"
+my_pg_path <- "D:/MQ_Data/Srimosus_20210920/G7/combined/txt/proteinGroups_crossmap.txt"
 
 #
 my_pg <- data.table::fread(
@@ -27,7 +28,8 @@ my_pg <- data.table::fread(
 # 
 #my_pheno_path <- "C:/Users/kxmna01/Dropbox/Home_work_sync/Work/Colleagues shared work/Fabio/HipA-HipB/HipA/Phenodata.txt"
 #my_pheno_path <- "T:/User/Phil/SCy004 Phosphoproteome Hagemann/PCTsee SCy004/phenodata.txt"
-my_pheno_path <- "T:/User/Katharina/20210113_Proteome/combined/txt/phenodata.txt"
+#my_pheno_path <- "T:/User/Katharina/20210113_Proteome/combined/txt/phenodata.txt"
+my_pheno_path <- "D:/MQ_Data/Srimosus_20210920/G7/combined/txt/phenodata.txt"
 
 # 
 my_pheno <- data.table::fread(
@@ -110,7 +112,9 @@ my_pg_final <- my_pg_label %>%
     dplyr::left_join(x = ., y = my_pheno_filt)
 
 my_cross_map <- my_pg_final %>%
-    dplyr::filter(., key_no_lab %in% c("Protein IDs", "Gene names")) %>%
+    dplyr::filter(
+        ., key_no_lab %in% c("Protein IDs", "Gene names") |
+            grepl("OtherName", key_no_lab)) %>%
     dplyr::select(., id, key_no_lab, value) %>%
     tidyr::separate_rows(
         data = ., value, sep = ";", convert = TRUE) %>%
@@ -118,7 +122,7 @@ my_cross_map <- my_pg_final %>%
 
 # This must be customised for every dataset
 my_default <- list(
-    `Gene names / Protein IDs` = "Q9Y2S6" %>% set_names(paste(., "(default)")),
+    `Gene names / Protein IDs` = "SRIM_014915" %>% set_names(paste(., "(default)")),
     `X-axis` = "Label duration" %>% set_names(paste(., "(default)")),
     `Y-axis` = "Intensity" %>% set_names(paste(., "(default)")),
     `Colour per` = "Cell line" %>% set_names(paste(., "(default)")),
