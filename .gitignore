@@ -5,3 +5,5 @@ inst/extdata/HipA.RDS
 inst/extdata/SCy004.RDS
 R/.Rhistory
 .Rhistory
+inst/extdata/Srim_G7_proteome.RDS
+*.RDS
