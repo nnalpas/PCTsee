@@ -6,10 +6,9 @@
 # Define the server role as a function for compatibility with shiny app
 server <- function(input, output, session) {
     
-    add_cols <- c(c(
+    add_cols <- c(
         "Protein IDs", "Majority protein IDs", "Protein names", "Gene names",
-        "Sequence coverage [%]", "Q-value", "Score", "Only identified by site"),
-        grep("^OtherName", unique(my_data$protein$key_no_lab), value = TRUE))
+        "Sequence coverage [%]", "Q-value", "Score", "Only identified by site")
     
     
     
@@ -17,6 +16,11 @@ server <- function(input, output, session) {
     my_data <- eventReactive(input$dataset, {
         readRDS(file = paste0("./inst/extdata/", input$dataset))
     })
+    
+    # Include OtherName columns if any
+    add_cols %<>%
+        c(., grep(
+            "^OtherName", unique(my_data()$protein$key_no_lab), value = TRUE))
     
     #observe({
     #    print(paste0("crossmap: ", dim(my_data()$crossmap), "; pg: ", dim(my_data()$protein)))
