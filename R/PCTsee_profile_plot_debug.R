@@ -20,9 +20,10 @@ my_f <- choose.files(caption = "Select a PCTsee RDS file!", multi = FALSE)
 
 my_data <- readRDS(my_f)
 
-add_cols <- c(
+add_cols <- c(c(
     "Protein IDs", "Majority protein IDs", "Protein names", "Gene names",
-    "Sequence coverage [%]", "Q-value", "Score", "Only identified by site")
+    "Sequence coverage [%]", "Q-value", "Score", "Only identified by site"),
+    grep("^OtherName", unique(my_data$protein$key_no_lab), value = TRUE))
 
 my_id <- unique(my_data$crossmap[
     my_data$crossmap$value == my_data$default$`Gene names / Protein IDs`, ][["id"]])
@@ -37,3 +38,5 @@ default_plot <- duration_plot(
     add_cols = add_cols,
     add_ref_value = FALSE)
 default_plot$plot
+
+
