@@ -18,9 +18,10 @@ server <- function(input, output, session) {
     })
     
     # Include OtherName columns if any
-    add_cols %<>%
-        c(., grep(
+    add_cols <- reactive({
+        c(add_cols, grep(
             "^OtherName", unique(my_data()$protein$key_no_lab), value = TRUE))
+    })
     
     #observe({
     #    print(paste0("crossmap: ", dim(my_data()$crossmap), "; pg: ", dim(my_data()$protein)))
@@ -157,7 +158,7 @@ server <- function(input, output, session) {
                 #group = input$p_group,
                 colour = input$p_colour,
                 shape = input$p_shape,
-                add_cols = add_cols,
+                add_cols = add_cols(),
                 add_ref_value = input$p_add_ref)
             return(my_res)
             
